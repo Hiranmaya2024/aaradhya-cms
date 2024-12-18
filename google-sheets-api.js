@@ -1,5 +1,5 @@
-const API_KEY = 'YOUR_API_KEY'; // Replace with your actual API key
-const SHEET_ID = 'YOUR_SHEET_ID'; // Replace with your Google Sheet ID
+const API_KEY = '830774784889-avjkop33i2o8hnj2tp8aongih1k3c8tb.apps.googleusercontent.com'; // Replace with your actual API key
+const SHEET_ID = '1ebu403DhcfqRJ6oVTZJHWT98-wxElQ5nx9djk-JoMp0'; // Replace with your Google Sheet ID
 const BASE_URL = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values`;
 
 // Fetch data from a specific sheet range
