@@ -1,5 +1,10 @@
-const API_KEY = '830774784889-avjkop33i2o8hnj2tp8aongih1k3c8tb.apps.googleusercontent.com'; // Replace with your actual API key
-const SHEET_ID = '1ebu403DhcfqRJ6oVTZJHWT98-wxElQ5nx9djk-JoMp0'; // Replace with your Google Sheet ID
+//const API_KEY = '830774784889-avjkop33i2o8hnj2tp8aongih1k3c8tb.apps.googleusercontent.com'; // Replace with your actual API key
+//const SHEET_ID = '1ebu403DhcfqRJ6oVTZJHWT98-wxElQ5nx9djk-JoMp0'; // Replace with your Google Sheet ID
+//const BASE_URL = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values`;
+require('dotenv').config();
+
+const API_KEY = process.env.GOOGLE_SHEETS_API_KEY;
+const SHEET_ID = process.env.GOOGLE_SHEET_ID;
 const BASE_URL = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values`;
 
 // Fetch data from a specific sheet range
