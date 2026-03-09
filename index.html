@@ -1220,13 +1220,23 @@ function initCompanies() {
 }
 
 function initTop() {
-  document.getElementById("topItems").innerHTML =
-    rows.slice(0, 10).map((r, i) => `
-      <div class="top-item" onclick="quickAdd('${e(r[1])}',${+r[6]||0},${+r[5]||0})">
-        <span class="t-rank">${String(i+1).padStart(2,'0')}</span>
-        <span class="fire">🔥</span>
-        <span style="overflow:hidden;text-overflow:ellipsis">${(r[1]||"").trim()}</span>
-      </div>`).join("");
+  fetch(API)
+    .then(r => r.json())
+    .then(data => {
+      let html = "";
+      data.forEach((item, i) => {
+        html += `
+          <div class="top-item" onclick="quickAdd('${e(item.name)}',0,999)">
+            <span class="t-rank">#${i+1}</span>
+            <span class="fire">🔥</span>
+            <span style="overflow:hidden;text-overflow:ellipsis">${item.name}</span>
+          </div>`;
+      });
+      document.getElementById("topItems").innerHTML = html;
+    })
+    .catch(() => {
+      document.getElementById("topItems").innerHTML = "";
+    });
 }
 
 document.getElementById("search").addEventListener("input", () => { page = 1; render(); });
@@ -1388,20 +1398,26 @@ function closeReview() { document.getElementById("modal").style.display = "none"
 function confirmOrder() {
   const shop  = document.getElementById("shopName").value.trim();
   const phone = document.getElementById("phoneNum").value.trim();
-  if (!shop)  { toast("Please enter shop name", "error"); return; }
-  if (!phone) { toast("Please enter phone number", "error"); return; }
-  let items = [], tot = 0;
+  if (!shop)  { showToast("Please enter your shop name", "error"); return; }
+  if (!phone) { showToast("Please enter your phone number", "error"); return; }
+  let items = [], total = 0;
   for (const n in cart) {
     if (cart[n].qty < 1) continue;
     const line = cart[n].qty * cart[n].rate;
-    tot += line;
+    total += line;
     items.push({ name: n, qty: cart[n].qty, rate: cart[n].rate, total: line });
   }
-  fetch(API, { method: "POST", mode: "no-cors", body: JSON.stringify({ shop, mobile: phone, total: tot, items }) });
-  closeReview(); cart = {}; syncCart();
+  fetch(API, {
+    method: "POST",
+    mode: "no-cors",
+    body: JSON.stringify({ shop: shop, mobile: phone, total: total, items: items })
+  });
+  closeReview();
+  cart = {};
+  syncCart();
   document.getElementById("shopName").value = "";
   document.getElementById("phoneNum").value = "";
-  toast("Order placed successfully! ✓", "success");
+  showToast("Order submitted successfully", "success");
 }
 
 // Close switcher when clicking outside
@@ -1425,6 +1441,7 @@ function toast(msg, type = "success") {
   clearTimeout(tTimer);
   tTimer = setTimeout(() => el.classList.remove("show"), ok ? 3500 : 2500);
 }
+const showToast = toast;
 </script>
 </body>
 </html>
