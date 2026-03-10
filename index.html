@@ -1213,8 +1213,26 @@ input::placeholder { color: var(--muted); font-weight: 400; }
 .b-canc:hover { border-color: var(--b2); color: var(--text); }
 
 /* ─── TOAST ─── */
-.toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(90px); background: var(--s1); border: 1px solid var(--b1); border-radius: var(--btn-radius); padding: 12px 22px; font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--text); box-shadow: 0 8px 32px rgba(0,0,0,.5); z-index: 1000; transition: transform .4s cubic-bezier(.4,0,.2,1); display: flex; align-items: center; gap: 10px; white-space: nowrap; max-width: 92vw; }
-.toast.show { transform: translateX(-50%) translateY(0); }
+#toastContainer {
+  position: fixed; bottom: 100px; left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  pointer-events: none;
+}
+.toast {
+  background: var(--s1); border: 1px solid var(--b1);
+  border-radius: var(--btn-radius); padding: 12px 22px;
+  font-family: var(--font-body); font-size: 13px; font-weight: 600; color: var(--text);
+  box-shadow: 0 8px 32px rgba(0,0,0,.5);
+  display: flex; align-items: center; gap: 10px;
+  white-space: nowrap; max-width: 92vw;
+  opacity: 0; transform: translateY(20px);
+  transition: opacity .35s ease, transform .35s cubic-bezier(.4,0,.2,1);
+  pointer-events: none;
+}
+.toast.show   { opacity: 1; transform: translateY(0); }
+.toast.hiding { opacity: 0; transform: translateY(-12px); }
 .t-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
 
 /* ═══════════════════════════════════════════════
@@ -1391,7 +1409,7 @@ input::placeholder { color: var(--muted); font-weight: 400; }
 </div>
 
 <!-- ─── TOAST ─── -->
-<div class="toast" id="toast"><span class="t-dot" id="tDot"></span><span id="tMsg"></span></div>
+<div id="toastContainer"></div>
 
 <!-- ═══════════════════════════════════════════════
      THEME SWITCHER
@@ -1775,15 +1793,24 @@ document.addEventListener('click', (ev) => {
 
 let tTimer;
 function toast(msg, type = "success") {
-  const el  = document.getElementById("toast");
-  const dot = document.getElementById("tDot");
   const ok  = type === "success";
-  document.getElementById("tMsg").textContent = msg;
-  dot.style.background = ok ? "var(--green)" : "var(--red)";
+  const dur = ok ? 3000 : 2000;
+
+  const el  = document.createElement("div");
+  el.className = "toast";
+  el.innerHTML = `<span class="t-dot" style="background:${ok ? "var(--green)" : "var(--red)"}"></span><span>${msg}</span>`;
   el.style.borderColor = ok ? "rgba(0,200,100,.3)" : "rgba(255,50,80,.3)";
-  el.classList.add("show");
-  clearTimeout(tTimer);
-  tTimer = setTimeout(() => el.classList.remove("show"), ok ? 3500 : 2500);
+
+  document.getElementById("toastContainer").appendChild(el);
+
+  // Trigger enter animation
+  requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add("show")));
+
+  // Fade out, then destroy
+  setTimeout(() => {
+    el.classList.add("hiding");
+    el.addEventListener("transitionend", () => el.remove(), { once: true });
+  }, dur);
 }
 const showToast = toast;
 </script>
