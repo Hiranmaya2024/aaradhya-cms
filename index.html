@@ -1429,6 +1429,15 @@ input::placeholder { color: var(--muted); font-weight: 400; }
 ::-webkit-scrollbar-thumb { background: var(--b2); border-radius: 2px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--acc); }
 
+/* ─── VERSION BADGE ─── */
+.v-badge {
+  font-family: var(--font-mono); font-size: 9px; font-weight: 700;
+  color: var(--bg); background: var(--acc);
+  border-radius: 3px; padding: 2px 6px;
+  letter-spacing: .06em; white-space: nowrap; flex-shrink: 0;
+  opacity: .85;
+}
+
 /* ─── RESPONSIVE ─── */
 @media(max-width:1024px){.h-mid{display:none}.grid{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}}
 @media(max-width:768px){.h-inner{height:54px;padding:0 14px}.brand-sub{display:none}.h-count{display:none}.cart-btn{padding:7px 13px;font-size:12px}.wrap{padding:14px}.tabs{flex-wrap:wrap}.tab{font-size:11px}.grid{grid-template-columns:repeat(auto-fill,minmax(175px,1fr))}.drawer{width:340px;right:-350px}.switcher-panel{right:14px;width:280px}}
@@ -1453,7 +1462,10 @@ input::placeholder { color: var(--muted); font-weight: 400; }
       <div class="logo-icon">💊</div>
       <div>
         <div class="brand-name">Aaradhya Pharmaceuticals</div>
-        <div class="brand-sub">Medicine Ordering System</div>
+        <div style="display:flex;align-items:center;gap:6px;margin-top:2px">
+          <div class="brand-sub">Medicine Ordering System</div>
+          <span class="v-badge">v1.0</span>
+        </div>
       </div>
     </div>
     <div class="h-mid">
