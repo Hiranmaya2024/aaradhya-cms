@@ -2035,40 +2035,24 @@ function openReview() {
 
 function closeReview() { document.getElementById("modal").style.display = "none"; }
 
-function genOrderId() {
-  const now  = new Date();
-  const dd   = String(now.getDate()).padStart(2,'0');
-  const mm   = String(now.getMonth()+1).padStart(2,'0');
-  const yy   = String(now.getFullYear()).slice(-2);
-  const hhmm = String(now.getHours()).padStart(2,'0') + String(now.getMinutes()).padStart(2,'0');
-  const rand = Math.random().toString(36).slice(2,5).toUpperCase();
-  return `ORD-${dd}${mm}${yy}-${hhmm}-${rand}`;
-}
-
 function confirmOrder() {
   const shop  = document.getElementById("shopName").value.trim();
   const phone = document.getElementById("phoneNum").value.trim();
   if (!shop)  { showToast("Please enter your shop name", "error"); return; }
   if (!phone) { showToast("Please enter your phone number", "error"); return; }
 
-  const orderId = genOrderId();
-  const date    = new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" });
-
-  // Flat rows — each entry maps exactly to sheet columns:
-  // [OrderID, Date, Shop, Mobile, Item, Qty, Rate, LineTotal, OrderTotal]
-  let rows = [], total = 0;
+  let items = [], total = 0;
   for (const n in cart) {
     if (cart[n].qty < 1) continue;
     const line = +(cart[n].qty * cart[n].rate).toFixed(2);
     total = +(total + line).toFixed(2);
-    rows.push([orderId, date, shop, phone, n, cart[n].qty, cart[n].rate, line, 0]);
+    items.push({ name: n, qty: cart[n].qty, rate: cart[n].rate, total: line });
   }
-  rows.forEach(r => r[8] = total); // back-fill OrderTotal once final
 
   fetch(API, {
     method: "POST",
     mode:   "no-cors",
-    body:   JSON.stringify({ rows })
+    body:   JSON.stringify({ shop, mobile: phone, total, items })
   });
 
   closeReview();
@@ -2076,7 +2060,7 @@ function confirmOrder() {
   syncCart();
   document.getElementById("shopName").value = "";
   document.getElementById("phoneNum").value = "";
-  showToast(`Order ${orderId} placed successfully`, "success");
+  showToast("Order placed successfully", "success");
 }
 
 // Close switcher when clicking outside
