@@ -1363,27 +1363,27 @@ input::placeholder { color: var(--muted); font-weight: 400; }
    THEME SWITCHER PANEL
 ═══════════════════════════════════════════════ */
 .switcher-toggle {
-  position: fixed; bottom: 24px; right: 24px; z-index: 800;
-  width: 52px; height: 52px; border-radius: 50%;
-  background: var(--acc); border: 2px solid var(--acc2);
-  color: var(--bg); font-size: 22px;
-  cursor: pointer; display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 4px 20px rgba(0,0,0,.4);
-  transition: all .2s;
-  animation: togglePulse 3s ease-in-out infinite;
+  display: flex; align-items: center; gap: 6px;
+  background: var(--acc-bg);
+  border: 1.5px solid var(--acc);
+  color: var(--acc);
+  padding: 7px 13px; border-radius: var(--btn-radius);
+  font-family: var(--font-head); font-size: 13px; font-weight: 700;
+  cursor: pointer; transition: all .2s; white-space: nowrap;
+  letter-spacing: .03em; flex-shrink: 0;
+  position: relative;
 }
-.switcher-toggle:hover { transform: scale(1.1); }
-@keyframes togglePulse { 0%,100%{box-shadow:0 4px 20px rgba(0,0,0,.4)} 50%{box-shadow:0 4px 30px rgba(0,0,0,.6), 0 0 0 6px var(--acc-bg)} }
+.switcher-toggle:hover { background: var(--acc); color: var(--bg); }
 
 .switcher-panel {
-  position: fixed; bottom: 90px; right: 24px; z-index: 799;
+  position: fixed; top: 68px; right: 20px; z-index: 799;
   width: 300px;
-  max-height: calc(100vh - 110px);
+  max-height: calc(100vh - 90px);
   overflow-y: auto;
   background: var(--s1); border: 1px solid var(--b2);
   border-radius: 12px; padding: 16px;
   box-shadow: 0 20px 60px rgba(0,0,0,.5);
-  transform: translateY(20px) scale(.95); opacity: 0; pointer-events: none;
+  transform: translateY(-10px) scale(.97); opacity: 0; pointer-events: none;
   transition: all .3s cubic-bezier(.4,0,.2,1);
 }
 .switcher-panel.open { transform: translateY(0) scale(1); opacity: 1; pointer-events: all; }
@@ -1440,9 +1440,9 @@ input::placeholder { color: var(--muted); font-weight: 400; }
 
 /* ─── RESPONSIVE ─── */
 @media(max-width:1024px){.h-mid{display:none}.grid{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}}
-@media(max-width:768px){.h-inner{height:54px;padding:0 14px}.brand-sub{display:none}.h-count{display:none}.cart-btn{padding:7px 13px;font-size:12px}.wrap{padding:14px}.tabs{flex-wrap:wrap}.tab{font-size:11px}.grid{grid-template-columns:repeat(auto-fill,minmax(175px,1fr))}.drawer{width:340px;right:-350px}.switcher-panel{right:14px;width:280px}}
-@media(max-width:480px){.h-inner{padding:0 12px;gap:10px}.brand-name{max-width:160px}.wrap{padding:10px}.top-items{grid-template-columns:1fr 1fr}.toolbar{flex-direction:column}.field{min-width:100%}.tabs{width:100%}.tab{flex:1;text-align:center;padding:7px 8px}.grid{grid-template-columns:1fr 1fr;gap:9px}.drawer{width:100%;right:-100%}.pager button{width:30px;height:30px}.switcher-toggle{bottom:16px;right:16px}.switcher-panel{bottom:82px;right:16px;width:calc(100vw - 32px);max-height:calc(100vh - 110px)}.theme-grid{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:360px){.grid{grid-template-columns:1fr}.theme-grid{grid-template-columns:1fr 1fr}.h-inner{gap:8px;padding:0 10px}.brand-name{font-size:13px;max-width:140px}.logo-icon{width:32px;height:32px;font-size:15px}.cart-btn{padding:6px 10px;font-size:11px}.c-badge{display:none}.switcher-panel{width:calc(100vw - 20px);right:10px}}
+@media(max-width:768px){.h-inner{height:54px;padding:0 14px}.brand-sub{display:none}.h-count{display:none}.cart-btn{padding:7px 13px;font-size:12px}.wrap{padding:14px}.tabs{flex-wrap:wrap}.tab{font-size:11px}.grid{grid-template-columns:repeat(auto-fill,minmax(175px,1fr))}.drawer{width:340px;right:-350px}.switcher-panel{right:14px;width:280px;top:62px}}
+@media(max-width:480px){.h-inner{padding:0 12px;gap:10px}.brand-name{max-width:160px}.wrap{padding:10px}.top-items{grid-template-columns:1fr 1fr}.toolbar{flex-direction:column}.field{min-width:100%}.tabs{width:100%}.tab{flex:1;text-align:center;padding:7px 8px}.grid{grid-template-columns:1fr 1fr;gap:9px}.drawer{width:100%;right:-100%}.pager button{width:30px;height:30px}.switcher-toggle{font-size:11px;padding:6px 8px}.theme-lbl{display:none}.switcher-panel{top:60px;right:10px;width:calc(100vw - 20px);max-height:calc(100vh - 80px)}.theme-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:360px){.grid{grid-template-columns:1fr}.theme-grid{grid-template-columns:1fr 1fr}.h-inner{gap:8px;padding:0 10px}.brand-name{font-size:13px;max-width:140px}.logo-icon{width:32px;height:32px;font-size:15px}.cart-btn{padding:6px 10px;font-size:11px}.c-badge{display:none}.switcher-toggle{font-size:10px;padding:5px 7px}.switcher-panel{top:56px;right:6px;width:calc(100vw - 12px)}}
 </style>
 </head>
 <body>
@@ -1476,6 +1476,7 @@ input::placeholder { color: var(--muted); font-weight: 400; }
     </div>
     <div class="h-right">
       <div class="h-count">Cart: <strong id="cartCount">0</strong></div>
+      <button class="switcher-toggle" id="switcherToggle" onclick="toggleSwitcher()" title="Switch Theme">🎨 <span class="theme-lbl">Theme</span></button>
       <button class="cart-btn" onclick="toggleCart()">🛒 Order Cart <span class="c-badge" id="cartBadge">0</span></button>
     </div>
   </div>
@@ -1550,8 +1551,6 @@ input::placeholder { color: var(--muted); font-weight: 400; }
 <!-- ═══════════════════════════════════════════════
      THEME SWITCHER
 ═══════════════════════════════════════════════ -->
-<button class="switcher-toggle" id="switcherToggle" onclick="toggleSwitcher()" title="Switch Theme">🎨</button>
-
 <div class="switcher-panel" id="switcherPanel">
   <div class="sp-title">
     Choose Theme
