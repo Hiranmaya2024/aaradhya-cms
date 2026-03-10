@@ -1757,29 +1757,50 @@ function openReview() {
 
 function closeReview() { document.getElementById("modal").style.display = "none"; }
 
+function genOrderId() {
+  const now  = new Date();
+  const dd   = String(now.getDate()).padStart(2,'0');
+  const mm   = String(now.getMonth()+1).padStart(2,'0');
+  const yy   = String(now.getFullYear()).slice(-2);
+  const hhmm = String(now.getHours()).padStart(2,'0') + String(now.getMinutes()).padStart(2,'0');
+  const rand = Math.random().toString(36).slice(2,5).toUpperCase();
+  return `ORD-${dd}${mm}${yy}-${hhmm}-${rand}`;
+}
+
 function confirmOrder() {
   const shop  = document.getElementById("shopName").value.trim();
   const phone = document.getElementById("phoneNum").value.trim();
   if (!shop)  { showToast("Please enter your shop name", "error"); return; }
   if (!phone) { showToast("Please enter your phone number", "error"); return; }
+
+  const orderId = genOrderId();
+  const date    = new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" });
+
   let items = [], total = 0;
   for (const n in cart) {
     if (cart[n].qty < 1) continue;
-    const line = cart[n].qty * cart[n].rate;
-    total += line;
-    items.push({ name: n, qty: cart[n].qty, rate: cart[n].rate, total: line });
+    const line = +(cart[n].qty * cart[n].rate).toFixed(2);
+    total = +(total + line).toFixed(2);
+    items.push({
+      orderId, date, shop, mobile: phone,
+      item: n, qty: cart[n].qty, rate: cart[n].rate,
+      lineTotal: line, orderTotal: 0
+    });
   }
+  items.forEach(r => r.orderTotal = total);
+
   fetch(API, {
     method: "POST",
-    mode: "no-cors",
-    body: JSON.stringify({ shop: shop, mobile: phone, total: total, items: items })
+    mode:   "no-cors",
+    body:   JSON.stringify({ orderId, date, shop, mobile: phone, total, items })
   });
+
   closeReview();
   cart = {};
   syncCart();
   document.getElementById("shopName").value = "";
   document.getElementById("phoneNum").value = "";
-  showToast("Order submitted successfully", "success");
+  showToast(`Order ${orderId} placed successfully`, "success");
 }
 
 // Close switcher when clicking outside
