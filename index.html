@@ -2054,23 +2054,21 @@ function confirmOrder() {
   const orderId = genOrderId();
   const date    = new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" });
 
-  let items = [], total = 0;
+  // Flat rows — each entry maps exactly to sheet columns:
+  // [OrderID, Date, Shop, Mobile, Item, Qty, Rate, LineTotal, OrderTotal]
+  let rows = [], total = 0;
   for (const n in cart) {
     if (cart[n].qty < 1) continue;
     const line = +(cart[n].qty * cart[n].rate).toFixed(2);
     total = +(total + line).toFixed(2);
-    items.push({
-      orderId, date, shop, mobile: phone,
-      item: n, qty: cart[n].qty, rate: cart[n].rate,
-      lineTotal: line, orderTotal: 0
-    });
+    rows.push([orderId, date, shop, phone, n, cart[n].qty, cart[n].rate, line, 0]);
   }
-  items.forEach(r => r.orderTotal = total);
+  rows.forEach(r => r[8] = total); // back-fill OrderTotal once final
 
   fetch(API, {
     method: "POST",
     mode:   "no-cors",
-    body:   JSON.stringify({ orderId, date, shop, mobile: phone, total, items })
+    body:   JSON.stringify({ rows })
   });
 
   closeReview();
